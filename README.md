@@ -1,1 +1,4 @@
-base-project
+# sio-mailer
+## Getting started
+### Migrations
+### Requirements
