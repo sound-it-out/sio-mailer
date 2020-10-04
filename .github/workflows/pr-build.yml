@@ -27,4 +27,4 @@ jobs:
 
     # Test projects
     - name: Test projects
-      run: dotnet test SIO-Maile.sln --configuration Release --no-restore --no-build --verbosity normal --filter Category=Unit -- xunit.parallelizeAssembly=true
+      run: dotnet test SIO-Mailer.sln --configuration Release --no-restore --no-build --verbosity normal --filter Category=Unit -- xunit.parallelizeAssembly=true
