@@ -24,7 +24,15 @@ namespace SIO.Domain.Emails.Processors
         {
             using (var smtpClient = new SmtpClient(_smtpOptions.Host, _smtpOptions.Port))
             {
-                smtpClient.Credentials = new NetworkCredential(_smtpOptions.Username, _smtpOptions.Password);
+                smtpClient.DeliveryMethod = _smtpOptions.DeliveryMethod;
+                smtpClient.EnableSsl = _smtpOptions.UseSsl;
+
+                if(!string.IsNullOrWhiteSpace(_smtpOptions.Username))
+                    smtpClient.Credentials = new NetworkCredential(_smtpOptions.Username, _smtpOptions.Password);
+
+                if (smtpClient.DeliveryMethod == SmtpDeliveryMethod.SpecifiedPickupDirectory)
+                    smtpClient.PickupDirectoryLocation = _smtpOptions.DirectoryPickupLocation;
+
                 await smtpClient.SendMailAsync(mailMessage);
             }
         }

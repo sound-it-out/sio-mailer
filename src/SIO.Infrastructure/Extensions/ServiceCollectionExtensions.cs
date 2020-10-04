@@ -8,6 +8,7 @@ namespace SIO.Infrastructure.Extensions
         public static IServiceCollection AddInfrastructure(this IServiceCollection source)
         {
             source.AddHostedService<EventConsumer>();
+            source.AddTransient<ISIOEventStore, SIOEventStore>();
             return source;
         }
     }

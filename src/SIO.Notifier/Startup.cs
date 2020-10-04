@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,7 +10,7 @@ using OpenEventSourcing.Extensions;
 using OpenEventSourcing.Serialization.Json.Extensions;
 using SIO.Domain.Extensions;
 using SIO.Domain.Projections.Extensions;
-using SIO.Domain.Translation.Events;
+using SIO.Domain.Users.Events;
 using SIO.Infrastructure.Extensions;
 
 namespace SIO.Notifier
@@ -43,20 +44,21 @@ namespace SIO.Notifier
                     .AddSubscription(s =>
                     {
                         s.UseName(_configuration.GetValue<string>("Azure:ServiceBus:Subscription"));
-                        s.ForEvent<TranslationFailed>();
-                        s.ForEvent<TranslationSucceded>();                        
+                        s.ForEvent<UserRegistered>();
+                        s.ForEvent<UserPasswordTokenGenerated>();                        
                     });
                 })
                 .AddCommands()
+                .AddQueries()
                 .AddEvents()
                 .AddJsonSerializers();
 
             services.AddInfrastructure()
                 .AddDomain()
+                .AddDomainConfiguration(_configuration)
                 .AddProjections();
 
-            services.AddMvcCore();
-            services.AddRazorPages();
+            services.AddMvcCore().AddRazorViewEngine(options => options.ViewLocationFormats.Add($"/Shared/{{0}}{RazorViewEngine.ViewExtension}"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

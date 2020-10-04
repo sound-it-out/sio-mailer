@@ -7,6 +7,7 @@ using OpenEventSourcing.Queries;
 using OpenEventSourcing.Serialization;
 using SIO.Domain.Emails.Aggregates;
 using SIO.Domain.Emails.Processors;
+using SIO.Domain.Emails.Serialization;
 using SIO.Domain.Users.Queries;
 
 namespace SIO.Domain.Emails.Builders
@@ -17,13 +18,13 @@ namespace SIO.Domain.Emails.Builders
         private readonly SmtpOptions _smtpOptions;
         private readonly IRazorViewBuilder _razorViewBuilder;
         private readonly IEventTypeCache _eventTypeCache;
-        private readonly IEventDeserializer _eventDeserializer;
+        private readonly IPayloadDeserializer _payloadDeserializer;
 
         public MailMessageBuilder(IQueryDispatcher queryDispatcher,
             IOptions<SmtpOptions> smtpOptions,
             IRazorViewBuilder razorViewBuilder,
             IEventTypeCache eventTypeCache,
-            IEventDeserializer eventDeserializer)
+            IPayloadDeserializer payloadDeserializer)
         {
             if (queryDispatcher == null)
                 throw new ArgumentNullException(nameof(queryDispatcher));
@@ -33,14 +34,14 @@ namespace SIO.Domain.Emails.Builders
                 throw new ArgumentNullException(nameof(razorViewBuilder));
             if (eventTypeCache == null)
                 throw new ArgumentNullException(nameof(eventTypeCache));
-            if (eventDeserializer == null)
-                throw new ArgumentNullException(nameof(eventDeserializer));
+            if (payloadDeserializer == null)
+                throw new ArgumentNullException(nameof(payloadDeserializer));
 
             _queryDispatcher = queryDispatcher;
             _smtpOptions = smtpOptions.Value;
             _razorViewBuilder = razorViewBuilder;
             _eventTypeCache = eventTypeCache;
-            _eventDeserializer = eventDeserializer;
+            _payloadDeserializer = payloadDeserializer;
         }
 
         public async Task<MailMessage> BuildAsync(EmailState email)
@@ -49,14 +50,16 @@ namespace SIO.Domain.Emails.Builders
 
             if(_eventTypeCache.TryGet(email.Template, out var eventType))
             {
-                var @event = _eventDeserializer.Deserialize(email.Payload, eventType);
+                var method = _payloadDeserializer.GetType().GetMethod(nameof(IPayloadDeserializer.Deserialize));
+                var generic = method.MakeGenericMethod(eventType);
+                var payload = generic.Invoke(this, new object[] { email.Payload });
                 var modelType = typeof(MailModel<>).MakeGenericType(eventType);
-                var model = Activator.CreateInstance(modelType, @event, userQueryResult.User);
+                var model = Activator.CreateInstance(modelType, payload, userQueryResult.User);
 
                 var body = await _razorViewBuilder.BuildAsync(email.Template, model);
 
                 return new MailMessage(
-                    from: _smtpOptions.FromAddress,
+                    from: _smtpOptions.From,
                     to: userQueryResult.User.Email,
                     subject: email.Subject,
                     body: body

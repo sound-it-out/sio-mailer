@@ -5,6 +5,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Emails\Templates\UserPasswordTokenGeneratedEmail.cshtml" />
+    <None Remove="Emails\Templates\UserRegistered\UserRegisteredEmail.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Emails\Templates\UserRegistered\UserRegisteredEmail.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Emails\Templates\UserPasswordTokenGenerated\UserPasswordTokenGeneratedEmail.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="OpenEventSourcing" Version="0.4.0" />
     <PackageReference Include="OpenEventSourcing.EntityFrameworkCore" Version="0.4.0" />
   </ItemGroup>
@@ -15,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Emails\Templates\Shared\" />
     <Folder Include="Users\Events\" />
   </ItemGroup>
 

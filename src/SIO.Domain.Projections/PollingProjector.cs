@@ -10,6 +10,7 @@ using OpenEventSourcing.EntityFrameworkCore.DbContexts;
 using OpenEventSourcing.EntityFrameworkCore.Entities;
 using OpenEventSourcing.Events;
 using OpenEventSourcing.Projections;
+using SIO.Infrastructure.Events;
 
 namespace SIO.Domain.Projections
 {
@@ -18,7 +19,7 @@ namespace SIO.Domain.Projections
     {
         private readonly TProjection _projection;
         private readonly IServiceScope _scope;
-        private readonly IEventStore _eventStore;
+        private readonly ISIOEventStore _eventStore;
         private readonly ILogger<PollingProjector<TProjection>> _logger;
         private readonly IOptionsSnapshot<PollingProjectorOptions> _options;
         private readonly IProjectionDbContextFactory _projectionDbContextFactory;
@@ -35,7 +36,7 @@ namespace SIO.Domain.Projections
             _logger = logger;
 
             _projection = _scope.ServiceProvider.GetRequiredService<TProjection>();
-            _eventStore = _scope.ServiceProvider.GetRequiredService<IEventStore>();
+            _eventStore = _scope.ServiceProvider.GetRequiredService<ISIOEventStore>();
             _options = _scope.ServiceProvider.GetRequiredService<IOptionsSnapshot<PollingProjectorOptions>>();
             _projectionDbContextFactory = _scope.ServiceProvider.GetRequiredService<IProjectionDbContextFactory>();
         }
@@ -72,7 +73,7 @@ namespace SIO.Domain.Projections
                     {
                         await context.Entry(state).ReloadAsync();
 
-                        var page = await _eventStore.GetEventsAsync(state.Position);
+                        var page = await _eventStore.TryGetEventsAsync(state.Position);
 
                         foreach (var @event in page.Events)
                             await _projection.HandleAsync(@event);

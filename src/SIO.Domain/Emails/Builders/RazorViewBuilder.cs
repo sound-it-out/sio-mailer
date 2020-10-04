@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 
@@ -32,14 +34,7 @@ namespace SIO.Domain.Emails.Builders
         {
             var actionContext = GetActionContext();
 
-            var viewEngineResult = _viewEngine.FindView(actionContext, $"/Views/Emails/{template}", false);
-
-            if (!viewEngineResult.Success)
-            {
-                throw new InvalidOperationException(string.Format("Couldn't find view '{0}'", template));
-            }
-
-            var view = viewEngineResult.View;
+            var view = FindView(actionContext, template);
 
             using (var output = new StringWriter())
             {
@@ -63,6 +58,22 @@ namespace SIO.Domain.Emails.Builders
 
                 return output.ToString();
             }
+        }
+
+        private IView FindView(ActionContext actionContext, string viewName)
+        {
+            var getViewResult = _viewEngine.GetView(executingFilePath: null, viewPath: viewName, isMainPage: true);
+            if (getViewResult.Success)
+                return getViewResult.View;
+
+            var findViewResult = _viewEngine.FindView(actionContext, viewName, isMainPage: true);
+            if (getViewResult.Success)
+                return findViewResult.View;
+
+            var searchedLocations = getViewResult.SearchedLocations.Concat(findViewResult.SearchedLocations);
+            var errorMessage = string.Join(Environment.NewLine, new[] { $"Unable to find view '{viewName}'. The following locations were searched:" }.Concat(searchedLocations));
+
+            throw new InvalidOperationException(errorMessage);
         }
 
         private ActionContext GetActionContext()

@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenEventSourcing.Commands;
-using OpenEventSourcing.EntityFrameworkCore.DbContexts;
 using OpenEventSourcing.Extensions;
 using OpenEventSourcing.Queries;
 using SIO.Domain.Emails.Commands;
-using SIO.Domain.Emails.Projections;
 using SIO.Domain.Emails.Queries;
 
 namespace SIO.Domain.Emails.Mailers
