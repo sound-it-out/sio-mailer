@@ -1,0 +1,30 @@
+name: PR Build
+
+on:
+  pull_request:
+    branches: [ master ]
+env:
+  NETCORE_VERSION: "3.1.101"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    # Install .NET Core
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.NETCORE_VERSION }}
+
+    # Restore projects
+    - name: Restore projects
+      run: dotnet restore
+
+    # Build projects
+    - name: Build projects
+      run: dotnet build --configuration Release --no-restore
+
+    # Test projects
+    - name: Test projects
+      run: dotnet test SIO-Maile.sln --configuration Release --no-restore --no-build --verbosity normal --filter Category=Unit -- xunit.parallelizeAssembly=true
