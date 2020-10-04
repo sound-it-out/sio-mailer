@@ -10,6 +10,7 @@ namespace SIO.Domain.Emails.Aggregates
         public string Subject { get; set; }
         public string Payload { get; set; }
         public string Template { get; set; }
+        public string Type { get; set; }
         public Guid RecipientId { get; set; }
         public EmailStatus Status { get; set; }
 
@@ -26,6 +27,7 @@ namespace SIO.Domain.Emails.Aggregates
             Subject = state.Subject;
             Payload = state.Payload;
             Template = state.Template;
+            Type = state.Type;
             RecipientId = state.RecipientId;
             Status = state.Status;
         }

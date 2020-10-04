@@ -15,7 +15,7 @@ namespace SIO.Domain.Emails.Aggregates
 
         public override EmailState GetState() => new EmailState(_state);
 
-        public void Queue(Guid aggregateId, string subject, string payload, string template, Guid recipientId) => Apply(new EmailQueued(aggregateId, Version.GetValueOrDefault() + 1, recipientId, subject, template, payload));
+        public void Queue(Guid aggregateId, string subject, string payload, string template, string type, Guid recipientId) => Apply(new EmailQueued(aggregateId, Version.GetValueOrDefault() + 1, recipientId, subject, template, payload, type));
         public void MarkAsFail(string error) => Apply(new EmailFailed(Id.Value, Version.GetValueOrDefault() + 1, error));
         public void MarkAsSuccess() => Apply(new EmailSucceded(Id.Value, Version.GetValueOrDefault() + 1));
 
@@ -30,6 +30,7 @@ namespace SIO.Domain.Emails.Aggregates
             _state.Subject = @event.Subject;
             _state.Payload = @event.Payload;
             _state.Template = @event.Template;
+            _state.Type = @event.Type;
             _state.Status = EmailStatus.Pending;
             Version = @event.Version;
         }

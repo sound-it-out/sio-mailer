@@ -10,7 +10,7 @@ using OpenEventSourcing.EntityFrameworkCore.DbContexts;
 namespace SIO.Migrations.Migrations.OpenEventSourcing.Projection
 {
     [DbContext(typeof(OpenEventSourcingProjectionDbContext))]
-    [Migration("20201004110540_InitialCreate")]
+    [Migration("20201004154325_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,6 +76,9 @@ namespace SIO.Migrations.Migrations.OpenEventSourcing.Projection
                         .HasColumnType("int");
 
                     b.Property<string>("Template")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Version")

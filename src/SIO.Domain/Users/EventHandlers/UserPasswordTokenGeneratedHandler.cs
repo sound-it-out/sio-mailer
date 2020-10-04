@@ -38,10 +38,11 @@ namespace SIO.Domain.Users.EventHandlers
             await _commandDispatcher.DispatchAsync(new QueueEmailCommand(aggregateId: Guid.NewGuid(),
                 correlationId: @event.Id,
                 userId: @event.UserId,
-                recipientId: new Guid(@event.UserId),
+                recipientId: @event.AggregateId,
                 subject: "Password reset",
                 payload: _payloadSerializer.Serialize(@event, new Dictionary<string, object> { { "ResetPasswordUrl", _emailOptions.Urls.ResetPassword } }),
-                template: $"~/Emails/Templates/{nameof(UserPasswordTokenGenerated)}/{nameof(UserPasswordTokenGenerated)}Email.cshtml"
+                template: $"~/Emails/Templates/{nameof(UserPasswordTokenGenerated)}/{nameof(UserPasswordTokenGenerated)}Email.cshtml",
+                type: typeof(UserRegistered).FullName
             ));
         }
     }

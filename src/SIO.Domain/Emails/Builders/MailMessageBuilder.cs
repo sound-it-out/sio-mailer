@@ -48,11 +48,11 @@ namespace SIO.Domain.Emails.Builders
         {
             var userQueryResult = await _queryDispatcher.DispatchAsync(new GetUserByIdQuery(Guid.NewGuid(), Guid.Empty.ToString(), email.RecipientId));
 
-            if(_eventTypeCache.TryGet(email.Template, out var eventType))
+            if(_eventTypeCache.TryGet(email.Type, out var eventType))
             {
                 var method = _payloadDeserializer.GetType().GetMethod(nameof(IPayloadDeserializer.Deserialize));
                 var generic = method.MakeGenericMethod(eventType);
-                var payload = generic.Invoke(this, new object[] { email.Payload });
+                var payload = generic.Invoke(_payloadDeserializer, new object[] { email.Payload });
                 var modelType = typeof(MailModel<>).MakeGenericType(eventType);
                 var model = Activator.CreateInstance(modelType, payload, userQueryResult.User);
 

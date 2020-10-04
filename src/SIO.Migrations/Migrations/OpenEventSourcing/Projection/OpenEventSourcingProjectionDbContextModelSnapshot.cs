@@ -76,6 +76,9 @@ namespace SIO.Migrations.Migrations.OpenEventSourcing.Projection
                     b.Property<string>("Template")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Version")
                         .HasColumnType("int");
 

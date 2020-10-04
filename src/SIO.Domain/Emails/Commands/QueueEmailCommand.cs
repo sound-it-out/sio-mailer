@@ -9,13 +9,15 @@ namespace SIO.Domain.Emails.Commands
         public string Subject { get; set; }
         public string Payload { get; set; }
         public string Template { get; set; }
+        public string Type { get; set; }
 
-        public QueueEmailCommand(Guid aggregateId, Guid correlationId, string userId, Guid recipientId, string subject, string payload, string template) : base(aggregateId, correlationId, 0, userId)
+        public QueueEmailCommand(Guid aggregateId, Guid correlationId, string userId, Guid recipientId, string subject, string payload, string template, string type) : base(aggregateId, correlationId, 0, userId)
         {
             RecipientId = recipientId;
             Subject = subject;
             Payload = payload;
             Template = template;
+            Type = type;
         }
     }
 }

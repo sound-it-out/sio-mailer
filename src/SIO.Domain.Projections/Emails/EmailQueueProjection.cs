@@ -34,6 +34,7 @@ namespace SIO.Domain.Projections.Emails
                     RecipientId = @event.RecipientId,
                     Payload = @event.Payload,
                     Template = @event.Template,
+                    Type = @event.Type,
                     Version = @event.Version,
                 };
             });

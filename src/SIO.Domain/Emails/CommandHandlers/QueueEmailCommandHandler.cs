@@ -42,7 +42,8 @@ namespace SIO.Domain.Emails.CommandHandlers
                 recipientId: command.RecipientId,
                 subject: command.Subject,
                 payload: command.Payload,
-                template: command.Template);
+                template: command.Template,
+                type: command.Type);
 
             var events = aggregate.GetUncommittedEvents();
 

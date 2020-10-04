@@ -29,6 +29,7 @@ namespace SIO.Migrations.Migrations.OpenEventSourcing.Projection
                     Status = table.Column<int>(nullable: false),
                     Template = table.Column<string>(nullable: true),
                     Payload = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(nullable: true),
                     RecipientId = table.Column<Guid>(nullable: false),
                     Version = table.Column<int>(nullable: false)
                 },

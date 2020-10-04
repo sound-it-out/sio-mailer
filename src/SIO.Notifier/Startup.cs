@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -58,7 +61,15 @@ namespace SIO.Notifier
                 .AddDomainConfiguration(_configuration)
                 .AddProjections();
 
-            services.AddMvcCore().AddRazorViewEngine(options => options.ViewLocationFormats.Add($"/Shared/{{0}}{RazorViewEngine.ViewExtension}"));
+            services.Configure<MvcRazorRuntimeCompilationOptions>(options =>
+            {
+                options.AddEmailTemplates();
+            });
+
+            var assembly = typeof(Startup).GetTypeInfo().Assembly;
+            services.AddMvc().AddRazorRuntimeCompilation()
+                            .AddApplicationPart(assembly)
+                            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

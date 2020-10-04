@@ -38,10 +38,11 @@ namespace SIO.Domain.Users.EventHandlers
             await _commandDispatcher.DispatchAsync(new QueueEmailCommand(aggregateId: Guid.NewGuid(),
                 correlationId: @event.Id,
                 userId: @event.UserId,
-                recipientId: new Guid(@event.UserId),
+                recipientId: @event.AggregateId,
                 subject: "You have been successfully registered, please activate your account",
                 payload: _payloadSerializer.Serialize(@event, new System.Collections.Generic.Dictionary<string, object> { { "ActivateUrl", _emailOptions.Urls.Activate } }),
-                template: $"~/Emails/Templates/{nameof(UserRegistered)}/{nameof(UserRegistered)}Email.cshtml"
+                template: $"~/Emails/Templates/{nameof(UserRegistered)}/{nameof(UserRegistered)}Email.cshtml",
+                type: typeof(UserRegistered).FullName
             ));
         }
     }
