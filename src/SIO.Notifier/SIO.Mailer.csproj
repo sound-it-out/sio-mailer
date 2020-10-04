@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>42d47993-b502-44ce-8152-2cf3ddc40fae</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="OpenEventSourcing" Version="0.4.0" />
+    <PackageReference Include="OpenEventSourcing.Azure.ServiceBus" Version="0.4.0" />
+    <PackageReference Include="OpenEventSourcing.EntityFrameworkCore" Version="0.4.0" />
+    <PackageReference Include="OpenEventSourcing.EntityFrameworkCore.SqlServer" Version="0.4.0" />
+    <PackageReference Include="OpenEventSourcing.Serialization.Json" Version="0.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SIO.Domain.Projections\SIO.Domain.Projections.csproj" />
+    <ProjectReference Include="..\SIO.Domain\SIO.Domain.csproj" />
+    <ProjectReference Include="..\SIO.Infrastructure\SIO.Infrastructure.csproj" />
+    <ProjectReference Include="..\SIO.Migrations\SIO.Migrations.csproj" />
+  </ItemGroup>
+
+</Project>
