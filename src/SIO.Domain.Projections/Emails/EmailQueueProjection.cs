@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using OpenEventSourcing.EntityFrameworkCore.DbContexts;
 using OpenEventSourcing.Projections;
+using SIO.Domain.Emails;
 using SIO.Domain.Emails.Events;
 using SIO.Domain.Emails.Projections;
 
@@ -10,12 +12,18 @@ namespace SIO.Domain.Projections.Emails
     public sealed class EmailQueueProjection : Projection<EmailQueue>
     {
         private readonly IProjectionDbContextFactory _projectionDbContextFactory;
-        public EmailQueueProjection(IProjectionWriter<EmailQueue> writer, IProjectionDbContextFactory projectionDbContextFactory) : base(writer)
+        private readonly int _maxRetries;
+        public EmailQueueProjection(IProjectionWriter<EmailQueue> writer, 
+            IProjectionDbContextFactory projectionDbContextFactory,
+            IOptions<EmailOptions> emailOptions) : base(writer)
         {
             if (projectionDbContextFactory == null)
                 throw new ArgumentNullException(nameof(projectionDbContextFactory));
+            if (emailOptions == null)
+                throw new ArgumentNullException(nameof(emailOptions));
 
             _projectionDbContextFactory = projectionDbContextFactory;
+            _maxRetries = emailOptions.Value.MaxRetries;
 
             Handles<EmailQueued>(HandleAsync);
             Handles<EmailFailed>(HandleAsync);
@@ -32,6 +40,7 @@ namespace SIO.Domain.Projections.Emails
                     Attempts = 0,
                     Status = EmailStatus.Pending,
                     RecipientId = @event.RecipientId,
+                    Subject = @event.Subject,
                     Payload = @event.Payload,
                     Template = @event.Template,
                     Type = @event.Type,
@@ -45,7 +54,7 @@ namespace SIO.Domain.Projections.Emails
             using(var context = _projectionDbContextFactory.Create())
             {
                 var notification = await context.Set<EmailQueue>().FindAsync(@event.AggregateId);
-                if(notification.Attempts == 5)
+                if(notification.Attempts == _maxRetries)
                 {
                     await _writer.Remove(@event.AggregateId);
                 }

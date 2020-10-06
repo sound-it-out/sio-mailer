@@ -30,7 +30,7 @@ namespace SIO.Domain.Emails.Serialization
             return JsonConvert.SerializeObject(new Payload
             {
                 EventData = _eventSerializer.Serialize(@event),
-                Metadata = metadata
+                Metadata = metadata ?? new Dictionary<string, object>()
             },
             _serializerSettings);
         }

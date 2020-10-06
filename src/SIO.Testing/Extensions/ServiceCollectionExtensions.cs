@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using OpenEventSourcing.EntityFrameworkCore.InMemory;
 using OpenEventSourcing.Events;
 using OpenEventSourcing.Extensions;
@@ -10,13 +9,6 @@ namespace SIO.Testing.Extensions
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddInMemoryDatabase(this IServiceCollection source)
-        {
-            source.AddOpenEventSourcing()
-                .AddEntityFrameworkCoreInMemory();
-            return source;
-        }
-
-        public static IServiceCollection AddInMemoryDatabase(this IServiceCollection source, InMemoryDatabaseRoot databaseRoot)
         {
             source.AddOpenEventSourcing()
                 .AddEntityFrameworkCoreInMemory();

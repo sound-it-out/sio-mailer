@@ -16,7 +16,7 @@ using SIO.Domain.Projections.Extensions;
 using SIO.Domain.Users.Events;
 using SIO.Infrastructure.Extensions;
 
-namespace SIO.Notifier
+namespace SIO.Mailer
 {
     public class Startup
     {

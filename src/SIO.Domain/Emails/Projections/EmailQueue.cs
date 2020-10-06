@@ -7,6 +7,7 @@ namespace SIO.Domain.Emails.Projections
         public Guid Id { get; set; }
         public int Attempts { get; set; }
         public EmailStatus Status { get; set; }
+        public string Subject { get; set; }
         public string Template { get; set; }
         public string Payload { get; set; }
         public string Type { get; set; }

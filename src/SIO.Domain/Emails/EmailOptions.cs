@@ -3,6 +3,7 @@
     public class EmailOptions
     {
         public EmailUrls Urls { get; set; }
+        public int MaxRetries { get; set; }
 
         public class EmailUrls
         {

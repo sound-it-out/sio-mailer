@@ -19,7 +19,8 @@ namespace SIO.Testing.Abstractions
         protected OpenEventSourcingProjectionDbContext Context { get; }
 
         protected abstract IEnumerable<IEvent> Given();
-        //protected abstract void When();
+
+        protected virtual void BuildServices(IServiceCollection services) { }
 
         protected ProjectionSpecification()
         {
@@ -39,6 +40,8 @@ namespace SIO.Testing.Abstractions
                             .AsImplementedInterfaces()
                             .WithScopedLifetime();
                     });
+
+            BuildServices(services);
 
             _serviceProvider = services.BuildServiceProvider();
 

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using SIO.Migrations.Extensions;
 
-namespace SIO.Notifier
+namespace SIO.Mailer
 {
     public class Program
     {
