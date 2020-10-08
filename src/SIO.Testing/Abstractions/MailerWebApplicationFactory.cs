@@ -6,7 +6,7 @@ using SIO.Mailer;
 namespace SIO.Testing.Abstractions
 {
     public class MailerWebApplicationFactory<TStartup> : WebApplicationFactory<Startup>
-        where TStartup: BaseStartup
+        where TStartup: class
     {
         protected override IWebHostBuilder CreateWebHostBuilder()
         {

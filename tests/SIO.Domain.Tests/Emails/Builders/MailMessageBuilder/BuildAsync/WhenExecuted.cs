@@ -1,27 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Mail;
-using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OpenEventSourcing.EntityFrameworkCore.DbContexts;
 using OpenEventSourcing.Extensions;
-using OpenEventSourcing.Serialization;
 using OpenEventSourcing.Serialization.Json.Extensions;
 using SIO.Domain.Emails.Aggregates;
 using SIO.Domain.Emails.Builders;
 using SIO.Domain.Emails.Processors;
 using SIO.Domain.Emails.Serialization;
 using SIO.Domain.Extensions;
-using SIO.Domain.Projections.Extensions;
 using SIO.Domain.Users.Events;
 using SIO.Domain.Users.Projections;
-using SIO.Testing.Abstractions;
 using SIO.Testing.Attributes;
 using SIO.Testing.Extensions;
 using SIO.Testing.Fakes.Notifications.Builders;
+using SIO.Testing.Specifications;
 
 namespace SIO.Domain.Tests.Emails.Builders.MailMessageBuilder.BuildAsync
 {

@@ -8,7 +8,7 @@ using OpenEventSourcing.Events;
 using OpenEventSourcing.Extensions;
 using OpenEventSourcing.Projections;
 
-namespace SIO.Testing.Abstractions
+namespace SIO.Testing.Specifications
 {
     public abstract class ProjectionSpecification<TProjection>
             where TProjection : IProjection

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using OpenEventSourcing.Projections;
 using SIO.Domain.Emails;
-using SIO.Testing.Abstractions;
+using SIO.Testing.Specifications;
 
 namespace SIO.Domain.Projections.Tests.Emails.EmailQueueProjection
 {

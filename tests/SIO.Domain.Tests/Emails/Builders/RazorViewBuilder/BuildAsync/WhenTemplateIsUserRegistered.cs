@@ -7,7 +7,7 @@ using SIO.Domain.Emails.Builders;
 using SIO.Domain.Users.Events;
 using SIO.Testing.Abstractions;
 using SIO.Testing.Attributes;
-using Xunit;
+using SIO.Testing.Specifications;
 
 namespace SIO.Domain.Tests.Emails.Builders.RazorViewBuilder.BuildAsync
 {

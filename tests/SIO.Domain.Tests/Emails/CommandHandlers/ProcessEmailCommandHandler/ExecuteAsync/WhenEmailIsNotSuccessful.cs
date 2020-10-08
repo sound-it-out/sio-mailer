@@ -13,10 +13,10 @@ using SIO.Domain.Emails.Builders;
 using SIO.Domain.Emails.Commands;
 using SIO.Domain.Emails.Events;
 using SIO.Domain.Emails.Processors;
-using SIO.Testing.Abstractions;
 using SIO.Testing.Attributes;
 using SIO.Testing.Fakes.Events;
 using SIO.Testing.Fakes.Notifications.Builders;
+using SIO.Testing.Specifications;
 
 namespace SIO.Domain.Tests.Emails.CommandHandlers.ProcessEmailCommandHandler.ExecuteAsync
 {

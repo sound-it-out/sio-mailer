@@ -22,11 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Emails\Mailers\BackgroundMailer\" />
-    <Folder Include="Emails\Processors\EmailProcessor\" />
     <Folder Include="Emails\QueryHandlers\GetEmailsQueryHandler\" />
-    <Folder Include="Emails\Serialization\PayloadDeserializer\" />
-    <Folder Include="Emails\Serialization\PayloadSerializer\" />
     <Folder Include="Users\EventHandlers\UserRegisteredHandler\" />
     <Folder Include="Users\EventHandlers\UserPasswordTokenGeneratedHandler\" />
     <Folder Include="Users\QueryHandlers\GetUserByIdQueryHandler\" />

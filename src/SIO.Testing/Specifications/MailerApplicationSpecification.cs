@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using SIO.Testing.Abstractions;
 using Xunit;
 
-namespace SIO.Testing.Abstractions
+namespace SIO.Testing.Specifications
 {
-    public abstract class MailerApplicationSpecification<TStartup> : IClassFixture<MailerWebApplicationFactory<TStartup>>
-        where TStartup: BaseStartup
+    public abstract class MailerApplicationSpecification<TStartup> : IAsyncLifetime, IClassFixture<MailerWebApplicationFactory<TStartup>>
+        where TStartup: class
     {
         protected readonly MailerWebApplicationFactory<TStartup> _mailerWebApplicationFactory;
         protected abstract Task Given();
@@ -44,8 +45,8 @@ namespace SIO.Testing.Abstractions
         }
     }
 
-    public abstract class MailerApplicationSpecification<TStartup, TResult> : IClassFixture<MailerWebApplicationFactory<TStartup>>
-        where TStartup : BaseStartup
+    public abstract class MailerApplicationSpecification<TStartup, TResult> : IAsyncLifetime, IClassFixture<MailerWebApplicationFactory<TStartup>>
+        where TStartup : class
     {
         protected readonly MailerWebApplicationFactory<TStartup> _mailerWebApplicationFactory;
         protected abstract Task<TResult> Given();

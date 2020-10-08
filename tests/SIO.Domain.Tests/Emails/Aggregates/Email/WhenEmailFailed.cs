@@ -6,8 +6,8 @@ using OpenEventSourcing.Events;
 using OpenEventSourcing.Extensions;
 using SIO.Domain.Emails.Aggregates;
 using SIO.Domain.Emails.Events;
-using SIO.Testing.Abstractions;
 using SIO.Testing.Attributes;
+using SIO.Testing.Specifications;
 
 namespace SIO.Domain.Tests.Emails.Aggregates.Email
 {

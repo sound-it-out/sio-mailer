@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +10,9 @@ using OpenEventSourcing.Extensions;
 using OpenEventSourcing.Serialization;
 using SIO.Domain.Emails.Commands;
 using SIO.Domain.Emails.Events;
-using SIO.Testing.Abstractions;
 using SIO.Testing.Attributes;
 using SIO.Testing.Fakes.Events;
+using SIO.Testing.Specifications;
 
 namespace SIO.Domain.Tests.Emails.CommandHandlers.QueueEmailCommandHandler.ExecuteAsync
 {

@@ -6,8 +6,8 @@ using OpenEventSourcing.Events;
 using OpenEventSourcing.Extensions;
 using SIO.Domain.Emails.Events;
 using SIO.Domain.Emails.Projections;
-using SIO.Testing.Abstractions;
 using SIO.Testing.Attributes;
+using SIO.Testing.Specifications;
 
 namespace SIO.Domain.Projections.Tests.Emails.EmailFailureProjection
 {
