@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using OpenEventSourcing.Domain;
 using OpenEventSourcing.Events;
+using SIO.Testing.Abstractions;
 
-namespace SIO.Testing.Abstractions
+namespace SIO.Testing.Specifications
 {
     public abstract class AggregateSpecification<TAggregateRoot, TState>
             where TAggregateRoot : Aggregate<TState>

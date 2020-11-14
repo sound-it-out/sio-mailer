@@ -5,7 +5,7 @@ on:
     branches: [ release/* ]
 env:
   AZURE_WEBAPP_PACKAGE_NAME: "publish"
-  NETCORE_VERSION: "3.1.101"
+  NETCORE_VERSION: "5.0.100"
 jobs:
   release:
     runs-on: ubuntu-latest

@@ -5,14 +5,14 @@ on:
     branches: [ master ]
 env:
   AZURE_WEBAPP_PACKAGE_NAME: "publish"
-  NETCORE_VERSION: "3.1.101"
+  NETCORE_VERSION: "5.0.100"
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    # Install .NET Core
-    - name: Setup .NET Core
+    # Install .NET
+    - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ env.NETCORE_VERSION }}
@@ -31,7 +31,7 @@ jobs:
 
     # Publish project
     - name: Publish project
-      run: dotnet publish src/SIO.Mailer/SIO.Mailer.csproj --configuration Release --output ${{ env.AZURE_WEBAPP_PACKAGE_NAME }}
+      run: dotnet publish src/SIO.Mailer/SIO.Mailer.csproj --configuration Release -r linux-x64 --self-contained --output ${{ env.AZURE_WEBAPP_PACKAGE_NAME }}
 
     - name: Deploy to Azure
       uses: azure/webapps-deploy@v2

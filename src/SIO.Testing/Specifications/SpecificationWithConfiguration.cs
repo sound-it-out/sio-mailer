@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using SIO.Testing.Abstractions;
+using SIO.Testing.Fixtures;
 using Xunit;
 
-namespace SIO.Testing.Abstractions
+namespace SIO.Testing.Specifications
 {
-    public abstract class Specification<TResult> : IAsyncLifetime
+    public abstract class SpecificationWithConfiguration<TConfigurationFixture, TResult> : IAsyncLifetime, IClassFixture<TConfigurationFixture>
+        where TConfigurationFixture : BaseConfigurationFixture
     {
         protected abstract Task<TResult> Given();
         protected abstract Task When();
@@ -13,12 +16,15 @@ namespace SIO.Testing.Abstractions
         protected ExceptionMode ExceptionMode { get; set; }
         protected TResult Result { get; private set; }
 
+        protected readonly TConfigurationFixture _configurationFixture;
         protected readonly IServiceProvider _serviceProvider;
 
         protected virtual void BuildServices(IServiceCollection services) { }
 
-        public Specification()
+        public SpecificationWithConfiguration(TConfigurationFixture configurationFixture)
         {
+            _configurationFixture = configurationFixture;
+
             var services = new ServiceCollection();
 
             BuildServices(services);
@@ -48,18 +54,23 @@ namespace SIO.Testing.Abstractions
             }
         }
     }
-    public abstract class Specification : IAsyncLifetime
+
+    public abstract class SpecificationWithConfiguration<TConfigurationFixture> : IAsyncLifetime, IClassFixture<TConfigurationFixture>
+        where TConfigurationFixture : BaseConfigurationFixture
     {
         protected abstract Task Given();
         protected abstract Task When();
         protected Exception Exception { get; private set; }
         protected ExceptionMode ExceptionMode { get; set; }
 
+        protected readonly TConfigurationFixture _configurationFixture;
         protected readonly IServiceProvider _serviceProvider;
         protected virtual void BuildServices(IServiceCollection services) { }
 
-        public Specification()
+        public SpecificationWithConfiguration(TConfigurationFixture configurationFixture)
         {
+            _configurationFixture = configurationFixture;
+
             var services = new ServiceCollection();
 
             BuildServices(services);

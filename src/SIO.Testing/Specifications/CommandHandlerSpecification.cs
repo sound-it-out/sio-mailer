@@ -1,29 +1,30 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using OpenEventSourcing.Commands;
 using OpenEventSourcing.Events;
 using OpenEventSourcing.Extensions;
 using OpenEventSourcing.Serialization.Json.Extensions;
 using SIO.Domain.Extensions;
 using SIO.Domain.Tests.Notifications.Notifiers;
+using SIO.Testing.Abstractions;
 using SIO.Testing.Extensions;
 using SIO.Testing.Fakes.Events;
 using Xunit;
 
-namespace SIO.Testing.Abstractions
+namespace SIO.Testing.Specifications
 {
-    public abstract class EventHandlerSpecification<TEvent> : IAsyncLifetime
-        where TEvent : IEvent
+    public abstract class CommandHandlerSpecification<TCommand> : IAsyncLifetime
+        where TCommand : ICommand
     {
-        protected abstract TEvent Given();
+        protected abstract TCommand Given();
         protected abstract Task When();
         protected Exception Exception { get; private set; }
         protected ExceptionMode ExceptionMode { get; set; }
 
         protected readonly IServiceProvider _serviceProvider;
-        protected readonly IEventDispatcher _eventDispatcher;
+        protected readonly ICommandDispatcher _commandDispatcher;
 
         protected virtual void BuildServices(IServiceCollection services)
         {
@@ -36,21 +37,17 @@ namespace SIO.Testing.Abstractions
             services.AddDomain();
             services.AddInMemoryDatabase();
             services.AddLogging();
-
-            services.RemoveAll<ICommandDispatcher>();
-
             services.AddSingleton<IEventBusPublisher, FakeEventBusPublisher>();
-            services.AddSingleton<ICommandDispatcher, FakeCommandDispatcher>();
         }
 
-        public EventHandlerSpecification()
+        public CommandHandlerSpecification()
         {
             var services = new ServiceCollection();
 
             BuildServices(services);
 
             _serviceProvider = services.BuildServiceProvider();
-            _eventDispatcher = _serviceProvider.GetRequiredService<IEventDispatcher>();
+            _commandDispatcher = _serviceProvider.GetServices<ICommandDispatcher>().First(c => c.GetType() != typeof(FakeCommandDispatcher));
         }
 
         public virtual Task DisposeAsync()
@@ -64,7 +61,7 @@ namespace SIO.Testing.Abstractions
 
             try
             {
-                await _eventDispatcher.DispatchAsync(Given());
+                await _commandDispatcher.DispatchAsync(Given());
             }
             catch (Exception e)
             {
