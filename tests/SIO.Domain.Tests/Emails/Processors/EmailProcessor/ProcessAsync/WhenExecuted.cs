@@ -53,25 +53,25 @@ namespace SIO.Domain.Tests.Emails.Processors.EmailProcessor.ProcessAsync
             _smtpServer = smtpServerFixture.Server;
         }
 
-        [Then]
+        [Integration]
         public void MailShouldBeSentWithCorrectFrom()
         {
             _smtpServer.ReceivedEmail[0].FromAddress.Address.Should().Be(_from);
         }
 
-        [Then]
+        [Integration]
         public void MailShouldBeSentWithCorrectTo()
         {
             _smtpServer.ReceivedEmail[0].ToAddresses[0].Address.Should().Be(_to);
         }
 
-        [Then]
+        [Integration]
         public void MailShouldBeSentWithCorrectSubject()
         {
             _smtpServer.ReceivedEmail[0].Headers["Subject"].Should().Be(_subject);
         }
 
-        [Then]
+        [Integration]
         public void MailShouldBeSentWithCorrectBody()
         {
             _smtpServer.ReceivedEmail[0].MessageParts[0].BodyData.Should().Be(_body);
