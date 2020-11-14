@@ -53,8 +53,8 @@ namespace SIO.Domain.Projections.Emails
         {
             using(var context = _projectionDbContextFactory.Create())
             {
-                var notification = await context.Set<EmailQueue>().FindAsync(@event.AggregateId);
-                if(notification.Attempts == _maxRetries)
+                var email = await context.Set<EmailQueue>().FindAsync(@event.AggregateId);
+                if(email.Attempts == _maxRetries)
                 {
                     await _writer.Remove(@event.AggregateId);
                 }
