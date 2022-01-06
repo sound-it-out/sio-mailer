@@ -1,22 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using OpenEventSourcing.Events;
-using OpenEventSourcing.Serialization;
+﻿using Newtonsoft.Json;
+using SIO.Infrastructure.Events;
 
 namespace SIO.Domain.Emails.Serialization
 {
     internal sealed class PayloadSerializer : IPayloadSerializer
     {
-        private readonly IEventSerializer _eventSerializer;
         private readonly JsonSerializerSettings _serializerSettings;
 
-        public PayloadSerializer(IEventSerializer eventSerializer)
+        public PayloadSerializer()
         {
-            if (eventSerializer == null)
-                throw new ArgumentNullException(nameof(eventSerializer));
-
-            _eventSerializer = eventSerializer;
             _serializerSettings = new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.None,
@@ -24,13 +16,14 @@ namespace SIO.Domain.Emails.Serialization
                 ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
             };
         }
-
-        public string Serialize<TEvent>(TEvent @event, Dictionary<string, object> metadata) where TEvent : IEvent
+        
+        public string Serialize(IEventContext<IEvent> payload)
         {
-            return JsonConvert.SerializeObject(new Payload
+
+            return JsonConvert.SerializeObject(new PayloadContext
             {
-                EventData = _eventSerializer.Serialize(@event),
-                Metadata = metadata ?? new Dictionary<string, object>()
+                Type = payload.Payload.GetType().FullName,
+                Payload = JsonConvert.SerializeObject(payload.Payload, _serializerSettings)
             },
             _serializerSettings);
         }

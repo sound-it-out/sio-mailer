@@ -1,0 +1,9 @@
+﻿@using SIO.Domain.Emails.Templates.UserRegistered
+@using System.Text
+@model UserRegisteredPayLoad
+@{
+    Layout = "~/Emails/Templates/Shared/_Layout.cshtml";
+}
+
+<p>Thanks for registering</p>
+<p>Please click <a href="@($"{Model.IdentityUrl}/account/verify?email={Model.Email}&token={Model.ActivationToken}")">here</a> to verify your email</p>

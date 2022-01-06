@@ -1,59 +1,66 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using OpenEventSourcing.Commands;
-using OpenEventSourcing.Domain;
-using OpenEventSourcing.Events;
+﻿using Microsoft.Extensions.Logging;
 using SIO.Domain.Emails.Aggregates;
 using SIO.Domain.Emails.Commands;
+using SIO.Domain.Emails.Serialization;
+using SIO.Infrastructure.Commands;
+using SIO.Infrastructure.Domain;
+using SIO.Infrastructure.Events;
 
 namespace SIO.Domain.Emails.CommandHandlers
 {
-    internal class QueueEmailCommandHandler : ICommandHandler<QueueEmailCommand>
+    internal sealed class QueueEmailCommandHandler : ICommandHandler<QueueEmailCommand>
     {
+        private readonly ILogger<QueueEmailCommandHandler> _logger;
         private readonly IAggregateRepository _aggregateRepository;
         private readonly IAggregateFactory _aggregateFactory;
-        private readonly IEventBusPublisher _eventBusPublisher;
+        private readonly IPayloadSerializer _payloadSerializer;
 
-        public QueueEmailCommandHandler(IAggregateRepository aggregateRepository,
+        public QueueEmailCommandHandler(ILogger<QueueEmailCommandHandler> logger,
+            IAggregateRepository aggregateRepository,
             IAggregateFactory aggregateFactory,
-            IEventBusPublisher eventBusPublisher)
+            IPayloadSerializer payloadSerializer)
         {
+            if (logger == null)
+                throw new ArgumentNullException(nameof(logger));
             if (aggregateRepository == null)
                 throw new ArgumentNullException(nameof(aggregateRepository));
             if (aggregateFactory == null)
                 throw new ArgumentNullException(nameof(aggregateFactory));
-            if (eventBusPublisher == null)
-                throw new ArgumentNullException(nameof(eventBusPublisher));
 
+            _logger = logger;
             _aggregateRepository = aggregateRepository;
             _aggregateFactory = aggregateFactory;
-            _eventBusPublisher = eventBusPublisher;
+            _payloadSerializer = payloadSerializer;
         }
 
-        public async Task ExecuteAsync(QueueEmailCommand command)
+        public async Task ExecuteAsync(QueueEmailCommand command, CancellationToken cancellationToken = default)
         {
-            var aggregate = _aggregateFactory.FromHistory<Email, EmailState>(Enumerable.Empty<IEvent>());
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                _logger.LogInformation($"{nameof(QueueEmailCommandHandler)}.{nameof(ExecuteAsync)} was cancelled before execution");
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
+            var aggregate = await _aggregateRepository.GetAsync<Email, EmailState>(command.Subject, cancellationToken);
+
+            if (aggregate != null)
+                return;
+
+            aggregate = _aggregateFactory.FromHistory<Email, EmailState>(Enumerable.Empty<IEvent>());
 
             if (aggregate == null)
                 throw new ArgumentNullException(nameof(aggregate));
 
-            aggregate.Queue(aggregateId: command.AggregateId,
-                recipientId: command.RecipientId,
+            aggregate.Queue(
                 subject: command.Subject,
-                payload: command.Payload,
-                template: command.Template,
-                type: command.Type);
+                publicationDate: command.PublicationDate,
+                payload: _payloadSerializer.Serialize(command.Event)
+            );
 
-            var events = aggregate.GetUncommittedEvents();
-
-            foreach (var @event in events)
-                @event.UpdateFrom(command);
-
-            events = events.ToList();
-
-            await _aggregateRepository.SaveAsync(aggregate, command.Version);
-            await _eventBusPublisher.PublishAsync(events);
+            await _aggregateRepository.SaveAsync(aggregate, command, cancellationToken: cancellationToken);
         }
     }
 }

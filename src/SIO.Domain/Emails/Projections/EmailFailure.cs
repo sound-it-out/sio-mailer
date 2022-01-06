@@ -1,11 +1,13 @@
-﻿using System;
+﻿using SIO.Infrastructure.Projections;
 
 namespace SIO.Domain.Emails.Projections
 {
-    public class EmailFailure
+    public class EmailFailure : IProjection
     {
-        public Guid Id { get; set; }
-        public Guid EmailId { get; set; }
-        public string Error { get; set; }
+        public string Id { get; set; }
+        public string? Subject { get; set; }
+        public string? Body { get; set; }
+        public string[]? Recipients { get; set; }
+        public string? Error { get; set; }
     }
 }

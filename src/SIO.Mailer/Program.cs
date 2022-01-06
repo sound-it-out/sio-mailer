@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using SIO.Migrations.Extensions;
+﻿using SIO.Infrastructure.EntityFrameworkCore.Extensions;
 
 namespace SIO.Mailer
 {
@@ -10,7 +7,11 @@ namespace SIO.Mailer
         public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            await host.SeedDatabaseAsync();
+            var env = host.Services.GetRequiredService<IHostEnvironment>();
+
+            if (env.IsDevelopment())
+                await host.RunProjectionMigrationsAsync();
+
             await host.RunAsync();
         }
 
