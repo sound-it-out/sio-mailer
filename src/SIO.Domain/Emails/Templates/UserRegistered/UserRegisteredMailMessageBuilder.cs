@@ -10,12 +10,13 @@ namespace SIO.Domain.Emails.Templates.UserRegistered
 
         public UserRegisteredMailMessageBuilder(ILogger<MailMessageBuilder<IntegrationEvents.Users.UserRegistered>> logger,
             IRazorViewBuilder razorViewBuilder,
-            IOptionsSnapshot<UrlOptions> optionsSnapshot) : base(logger, razorViewBuilder)
+            IOptionsSnapshot<SmtpOptions> smtpOptionsSnapshot,
+            IOptionsSnapshot<UrlOptions> urlOptionsSnapshot) : base(logger, razorViewBuilder, smtpOptionsSnapshot)
         {
-            if (optionsSnapshot == null)
-                throw new ArgumentException(nameof(optionsSnapshot));
+            if (urlOptionsSnapshot == null)
+                throw new ArgumentException(nameof(urlOptionsSnapshot));
 
-            _urlOptions = optionsSnapshot.Value;
+            _urlOptions = urlOptionsSnapshot.Value;
         }
 
         protected override Task<string[]> GenerateRecipentsAsync(IntegrationEvents.Users.UserRegistered @event) => Task.FromResult(new string[] { @event.Email });
