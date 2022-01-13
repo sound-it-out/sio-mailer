@@ -12,7 +12,7 @@ using SIO.Infrastructure.EntityFrameworkCore.DbContexts;
 namespace SIO.Migrations.Migrations.SIO.Projection
 {
     [DbContext(typeof(SIOProjectionDbContext))]
-    [Migration("20220105141009_InitialCreate")]
+    [Migration("20220113193811_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,6 +76,13 @@ namespace SIO.Migrations.Migrations.SIO.Projection
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Verified")
+                        .HasColumnType("bit");
 
                     b.HasKey("Subject");
 

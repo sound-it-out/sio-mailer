@@ -13,7 +13,8 @@ namespace SIO.Domain
 
         public static Type[] EmailEvents = new Type[]
         {
-            typeof(IntegrationEvents.Users.UserRegistered)
+            typeof(IntegrationEvents.Users.UserRegistered),
+            typeof(IntegrationEvents.Users.UserPasswordTokenGenerated)
         };
     }
 }

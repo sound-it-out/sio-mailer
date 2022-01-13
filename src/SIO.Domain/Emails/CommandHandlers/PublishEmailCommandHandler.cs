@@ -6,6 +6,7 @@ using SIO.Domain.Emails.Aggregates;
 using SIO.Domain.Emails.Commands;
 using SIO.Domain.Emails.Serialization;
 using SIO.Domain.Emails.Templates;
+using SIO.EntityFrameworkCore.DbContexts;
 using SIO.Infrastructure.Commands;
 using SIO.Infrastructure.Domain;
 using SIO.Infrastructure.Events;
@@ -15,15 +16,15 @@ namespace SIO.Domain.Emails.CommandHandlers
     internal sealed class PublishEmailCommandHandler : ICommandHandler<PublishEmailCommand>
     {
         private readonly ILogger<PublishEmailCommandHandler> _logger;
-        private readonly IAggregateRepository _aggregateRepository;
-        private readonly IEventStore _eventStore;
+        private readonly IAggregateRepository<SIOMailerStoreDbContext> _aggregateRepository;
+        private readonly IEventStore<SIOMailerStoreDbContext> _eventStore;
         private readonly SmtpOptions _smtpOptions;
         private readonly IMailMessageBuilder _mailMessageBuilder;
         private readonly IPayloadDeserializer _payloadDeserializer;
 
         public PublishEmailCommandHandler(ILogger<PublishEmailCommandHandler> logger,
-            IAggregateRepository aggregateRepository,
-            IEventStore eventStore,
+            IAggregateRepository<SIOMailerStoreDbContext> aggregateRepository,
+            IEventStore<SIOMailerStoreDbContext> eventStore,
             IOptionsSnapshot<SmtpOptions> optionsSnapshot,
             IMailMessageBuilder mailMessageBuilder,
             IPayloadDeserializer payloadDeserializer)
@@ -89,6 +90,10 @@ namespace SIO.Domain.Emails.CommandHandlers
                 }             
 
                 aggregate.Succeed(mailMessage.Body, mailMessage.To.Select(t => t.Address).ToArray(), mailMessage.Subject);
+            }
+            catch(SmtpException ex)
+            {
+                aggregate.Fail($"Email failed to send due smtp failures.{Environment.NewLine}statuscode: {(int)ex.StatusCode}({ex.StatusCode}),{Environment.NewLine}message: {ex.Message},{Environment.NewLine}InnerException: {ex.InnerException?.Message}", mailMessage?.Body, mailMessage?.To.Select(t => t.Address).ToArray());
             }
             catch (Exception ex)
             {

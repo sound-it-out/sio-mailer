@@ -1,25 +1,20 @@
-﻿using SIO.Infrastructure.EntityFrameworkCore.Extensions;
+﻿using SIO.EntityFrameworkCore.DbContexts;
+using SIO.Infrastructure.EntityFrameworkCore.Extensions;
+using SIO.Mailer;
 
-namespace SIO.Mailer
-{
-    public class Program
+var host = Host.CreateDefaultBuilder(args)
+    .ConfigureWebHostDefaults(webBuilder =>
     {
-        public static async Task Main(string[] args)
-        {
-            var host = CreateHostBuilder(args).Build();
-            var env = host.Services.GetRequiredService<IHostEnvironment>();
+        webBuilder.UseStartup<Startup>();
+    })
+    .Build();
 
-            if (env.IsDevelopment())
-                await host.RunProjectionMigrationsAsync();
+var env = host.Services.GetRequiredService<IHostEnvironment>();
 
-            await host.RunAsync();
-        }
+if (env.IsDevelopment())
+{
+    await host.RunProjectionMigrationsAsync();
+    await host.RunStoreMigrationsAsync<SIOMailerStoreDbContext>();
+}    
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
-}
+await host.RunAsync();

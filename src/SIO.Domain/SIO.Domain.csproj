@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.2.0" />
-    <PackageReference Include="SIO.Infrastructure" Version="0.0.6" />
-    <PackageReference Include="SIO.Infrastructure.EntityFrameworkCore.SqlServer" Version="0.0.6" />
+    <PackageReference Include="SIO.Infrastructure" Version="0.0.7" />
+    <PackageReference Include="SIO.Infrastructure.EntityFrameworkCore.SqlServer" Version="0.0.7" />
     <PackageReference Include="SIO.IntegrationEvents" Version="0.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.1" />
@@ -20,12 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Emails\Templates\Shared\_Layout.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Emails\Templates\UserRegistered\UserRegistered.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <ProjectReference Include="..\SIO.EntityFrameworkCore\SIO.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
 </Project>

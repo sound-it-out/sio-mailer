@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SIO.Migrations", "src\SIO.M
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{E400DA5B-CFD9-4653-8A06-475473BC095E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SIO.EntityFrameworkCore", "src\SIO.EntityFrameworkCore\SIO.EntityFrameworkCore.csproj", "{DDCE3162-C05F-4448-8773-8B13A2B0B198}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{E400DA5B-CFD9-4653-8A06-475473BC095E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E400DA5B-CFD9-4653-8A06-475473BC095E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E400DA5B-CFD9-4653-8A06-475473BC095E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDCE3162-C05F-4448-8773-8B13A2B0B198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDCE3162-C05F-4448-8773-8B13A2B0B198}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDCE3162-C05F-4448-8773-8B13A2B0B198}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDCE3162-C05F-4448-8773-8B13A2B0B198}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{B04607F3-0489-4056-9721-53B670CB8EA0} = {41E2938B-C3DC-499E-B795-221C7526CA9B}
 		{C43A5C31-7E3F-4AF1-87D3-AE7E2BF79923} = {41E2938B-C3DC-499E-B795-221C7526CA9B}
 		{0E0F3D24-7216-4E3E-8760-12C66A0A0C5C} = {41E2938B-C3DC-499E-B795-221C7526CA9B}
+		{DDCE3162-C05F-4448-8773-8B13A2B0B198} = {41E2938B-C3DC-499E-B795-221C7526CA9B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55365F8C-C136-40CE-859C-C56FF177B340}

@@ -75,6 +75,13 @@ namespace SIO.Migrations.Migrations.SIO.Projection
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Verified")
+                        .HasColumnType("bit");
+
                     b.HasKey("Subject");
 
                     b.ToTable("User", (string)null);

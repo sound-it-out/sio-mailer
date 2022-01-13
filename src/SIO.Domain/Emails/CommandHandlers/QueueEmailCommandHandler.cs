@@ -2,6 +2,7 @@
 using SIO.Domain.Emails.Aggregates;
 using SIO.Domain.Emails.Commands;
 using SIO.Domain.Emails.Serialization;
+using SIO.EntityFrameworkCore.DbContexts;
 using SIO.Infrastructure.Commands;
 using SIO.Infrastructure.Domain;
 using SIO.Infrastructure.Events;
@@ -11,12 +12,12 @@ namespace SIO.Domain.Emails.CommandHandlers
     internal sealed class QueueEmailCommandHandler : ICommandHandler<QueueEmailCommand>
     {
         private readonly ILogger<QueueEmailCommandHandler> _logger;
-        private readonly IAggregateRepository _aggregateRepository;
+        private readonly IAggregateRepository<SIOMailerStoreDbContext> _aggregateRepository;
         private readonly IAggregateFactory _aggregateFactory;
         private readonly IPayloadSerializer _payloadSerializer;
 
         public QueueEmailCommandHandler(ILogger<QueueEmailCommandHandler> logger,
-            IAggregateRepository aggregateRepository,
+            IAggregateRepository<SIOMailerStoreDbContext> aggregateRepository,
             IAggregateFactory aggregateFactory,
             IPayloadSerializer payloadSerializer)
         {

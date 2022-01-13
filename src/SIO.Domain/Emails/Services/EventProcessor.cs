@@ -8,11 +8,6 @@ using SIO.Infrastructure.Commands;
 using SIO.Infrastructure.EntityFrameworkCore.DbContexts;
 using SIO.Infrastructure.EntityFrameworkCore.Entities;
 using SIO.Infrastructure.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SIO.Domain.Emails.Services
 {
@@ -21,7 +16,7 @@ namespace SIO.Domain.Emails.Services
         private Task _executingTask;
         private CancellationTokenSource StoppingCts { get; set; }
         private readonly IServiceScope _scope;
-        private readonly IEventStore _eventStore;
+        private readonly IEventStore<SIOStoreDbContext> _eventStore;
         private readonly ILogger<EventProcessor> _logger;
         private readonly IOptionsSnapshot<EventProcessorOptions> _options;
         private readonly ISIOProjectionDbContextFactory _projectionDbContextFactory;
@@ -39,7 +34,7 @@ namespace SIO.Domain.Emails.Services
 
             _scope = serviceScopeFactory.CreateScope();
             _logger = logger;
-            _eventStore = _scope.ServiceProvider.GetRequiredService<IEventStore>();
+            _eventStore = _scope.ServiceProvider.GetRequiredService<IEventStore<SIOStoreDbContext>>();
             _options = _scope.ServiceProvider.GetRequiredService<IOptionsSnapshot<EventProcessorOptions>>();
             _projectionDbContextFactory = _scope.ServiceProvider.GetRequiredService<ISIOProjectionDbContextFactory>();
             _commandDispatcher = _scope.ServiceProvider.GetRequiredService<ICommandDispatcher>();

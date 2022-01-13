@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using SIO.Domain;
 using SIO.Domain.Extensions;
+using SIO.EntityFrameworkCore.DbContexts;
+using SIO.Infrastructure.EntityFrameworkCore.DbContexts;
 using SIO.Infrastructure.EntityFrameworkCore.Extensions;
 using SIO.Infrastructure.EntityFrameworkCore.SqlServer.Extensions;
 using SIO.Infrastructure.Extensions;
@@ -17,7 +19,8 @@ namespace SIO.Mailer.Extensions
             services.AddSIOInfrastructure()
                 .AddEntityFrameworkCoreSqlServer(options =>
                 {
-                    options.AddStore(configuration.GetConnectionString("Store"), o => o.MigrationsAssembly($"{nameof(SIO)}.{nameof(Migrations)}"));
+                    options.AddStore<SIOStoreDbContext>(configuration.GetConnectionString("Store"), o => o.MigrationsAssembly($"{nameof(SIO)}.{nameof(Migrations)}"));
+                    options.AddStore<SIOMailerStoreDbContext>(configuration.GetConnectionString("MailerStore"), o => o.MigrationsAssembly($"{nameof(SIO)}.{nameof(Migrations)}"));
                     options.AddProjections(configuration.GetConnectionString("Projection"), o => o.MigrationsAssembly($"{nameof(SIO)}.{nameof(Migrations)}"));
                 })
                 .AddEntityFrameworkCoreStoreProjector(options => options.WithDomainProjections())

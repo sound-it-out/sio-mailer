@@ -30,9 +30,26 @@ namespace SIO.Domain.Users.Projections.Managers
             await Task.WhenAll(_projectionWriters.Select(pw => pw.AddAsync(@event.Subject, () => new User
             {
                 Subject = @event.Subject,
+                FirstName = @event.FirstName,
                 Email = @event.Email
             }, cancellationToken)));
         }
+
+
+        public async Task HandleAsync(UserVerified @event, CancellationToken cancellationToken = default)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                _logger.LogInformation($"{nameof(UserProjectionManager)}.{nameof(HandleAsync)} was cancelled before execution");
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
+            await Task.WhenAll(_projectionWriters.Select(pw => pw.UpdateAsync(@event.Subject, u =>
+            {
+                u.Verified = true;
+            })));
+        }
+
 
         public override async Task ResetAsync(CancellationToken cancellationToken = default)
         {

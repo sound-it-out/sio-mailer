@@ -34,9 +34,12 @@ namespace SIO.Domain.Emails.Templates
         protected abstract Task<string[]> GenerateRecipentsAsync(TEvent @event);
         protected abstract Task<string> GenerateSubjectAsync(TEvent @event);
         protected virtual Task<string> GenerateBodyAsync(TEvent @event) => _razorViewBuilder.BuildAsync(typeof(TEvent).Name, @event);
+        protected virtual Task InitializeAsync(TEvent @event) => Task.CompletedTask;
 
         public async Task<MailMessage> BuildAsync(TEvent @event)
         {
+            await InitializeAsync(@event);
+
             var message = new MailMessage
             {
                 From = new MailAddress(_smtpOptions.From),

@@ -25,7 +25,7 @@ namespace SIO.Domain.Emails.Templates.UserRegistered
         protected override Task<string> GenerateBodyAsync(IntegrationEvents.Users.UserRegistered @event)
             => _razorViewBuilder.BuildAsync(
                 nameof(IntegrationEvents.Users.UserRegistered),
-                new UserRegisteredPayLoad(@event.Email, @event.FirstName, Convert.ToBase64String(Encoding.UTF8.GetBytes(@event.ActivationToken)), _urlOptions.AppUrl)
+                new UserRegisteredPayLoad(@event.Email, @event.FirstName, Convert.ToBase64String(Encoding.UTF8.GetBytes(@event.ActivationToken)), _urlOptions)
             );
     }
 }

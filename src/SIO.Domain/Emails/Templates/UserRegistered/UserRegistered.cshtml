@@ -5,5 +5,10 @@
     Layout = "~/Emails/Templates/Shared/_Layout.cshtml";
 }
 
-<p>Thanks for registering</p>
-<p>Please click <a href="@($"{Model.IdentityUrl}/account/verify?email={Model.Email}&token={Model.ActivationToken}")">here</a> to verify your email</p>
+<div class="row">
+    <div class="col text-center">        
+        <h3>Verify your email address</h3>
+        <p>Thanks for registering! You have entered @Model.Email as your email address, please click the button below to verify</p>
+         <a class="btn btn-primary" href="@($"{Model.UrlOptions.IdentityUrl}/verify?email={Model.Email}&token={Model.ActivationToken}")" target="_blank">Verify your email</a></div>
+     </div>
+</div>

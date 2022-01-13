@@ -57,7 +57,9 @@ namespace SIO.Migrations.Migrations.SIO.Projection
                 columns: table => new
                 {
                     Subject = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Verified = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

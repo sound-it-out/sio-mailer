@@ -7,14 +7,18 @@ services:
       context: .
       dockerfile: src/SIO.Mailer/Dockerfile
     depends_on: 
-      - sio.mailer.sql.projections
+      - sio.mailer.sql
       - sio.mailhog
     external_links:
       - sio.sql.store
-  sio.mailer.sql.projections:
+  sio.mailer.sql:
     image: "mcr.microsoft.com/mssql/server:2019-latest"
   sio.mailhog:
     image: mailhog/mailhog
+    depends_on:
+      - sio.mailhog.mongodb
+  sio.mailhog.mongodb:
+    image: mongo
 networks:    
   default:
     external:
