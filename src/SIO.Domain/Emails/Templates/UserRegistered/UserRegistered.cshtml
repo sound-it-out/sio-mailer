@@ -1,0 +1,14 @@
+﻿@using SIO.Domain.Emails.Templates.UserRegistered
+@using System.Text
+@model UserRegisteredPayLoad
+@{
+    Layout = "~/Emails/Templates/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col text-center">        
+        <h3>Verify your email address</h3>
+        <p>Thanks for registering! You have entered @Model.Email as your email address, please click the button below to verify</p>
+         <a class="btn btn-primary" href="@($"{Model.UrlOptions.IdentityUrl}/verify?email={Model.Email}&token={Model.ActivationToken}")" target="_blank">Verify your email</a></div>
+     </div>
+</div>

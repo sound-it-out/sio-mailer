@@ -1,28 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.2.0" />
+    <PackageReference Include="SIO.Infrastructure" Version="0.0.8" />
+    <PackageReference Include="SIO.Infrastructure.EntityFrameworkCore.SqlServer" Version="0.0.8" />
+    <PackageReference Include="SIO.IntegrationEvents" Version="0.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.1" />
+  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Emails\Templates\**" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.8" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.1.8" />
-    <PackageReference Include="OpenEventSourcing" Version="0.4.0" />
-    <PackageReference Include="OpenEventSourcing.EntityFrameworkCore" Version="0.4.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SIO.Infrastructure\SIO.Infrastructure.csproj" />
-    <ProjectReference Include="..\SIO.Migrations\SIO.Migrations.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Emails\Templates\Shared\" />
-    <Folder Include="Users\Events\" />
+    <ProjectReference Include="..\SIO.EntityFrameworkCore\SIO.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
 </Project>

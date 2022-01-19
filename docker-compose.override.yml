@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  sio.mailer:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ConnectionStrings__Store=Server=sio.sql.store;Initial Catalog=sio-store;User Id=sa;Password=1qaz-pl,
+      - ConnectionStrings__MailerStore=Server=sio.mailer.sql;Initial Catalog=sio-mailer-store;User Id=sa;Password=1qaz-pl,
+      - ConnectionStrings__Projection=Server=sio.mailer.sql;Initial Catalog=sio-mailer-projections;User Id=sa;Password=1qaz-pl,
+      - SMTP__Host=sio.mailhog
+      - SMTP__Port=1025
+      - URL__IdentityUrl=https://sio.identity:5001
+    ports:
+      - "5222:80"
+      - "7222:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  sio.mailer.sql:
+    user: 'root'
+    environment:
+      SA_PASSWORD: "1qaz-pl,"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1453:1433"
+    volumes:
+      - /var/opt/mssql/data
+  sio.mailhog:
+    environment:
+      MH_STORAGE: mongodb
+      MH_MONGO_URI: sio.mailhog.mongodb:27017
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui

@@ -1,21 +1,20 @@
 ﻿using System;
 using Newtonsoft.Json;
-using OpenEventSourcing.Events;
-using OpenEventSourcing.Serialization;
+using SIO.Infrastructure.Events;
 
 namespace SIO.Domain.Emails.Serialization
 {
     internal sealed class PayloadDeserializer : IPayloadDeserializer
     {
-        private readonly IEventDeserializer _eventDeserializer;
+        private readonly IEventTypeCache _eventTypeCache;
         private readonly JsonSerializerSettings _serializerSettings;
 
-        public PayloadDeserializer(IEventDeserializer eventDeserializer)
+        public PayloadDeserializer(IEventTypeCache eventTypeCache)
         {
-            if (eventDeserializer == null)
-                throw new ArgumentNullException(nameof(eventDeserializer));
+            if (eventTypeCache == null)
+                throw new ArgumentNullException(nameof(eventTypeCache));
 
-            _eventDeserializer = eventDeserializer;
+            _eventTypeCache = eventTypeCache;
             _serializerSettings = new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.None,
@@ -24,14 +23,14 @@ namespace SIO.Domain.Emails.Serialization
             };
         }
 
-        public Payload<TEvent> Deserialize<TEvent>(string payload) where TEvent : IEvent
+        public IEvent Deserialize(string payload)
         {
-            var payloadModel = JsonConvert.DeserializeObject<Payload>(payload);
-            return new Payload<TEvent>
-            {
-                Event = _eventDeserializer.Deserialize<TEvent>(payloadModel.EventData),
-                Metadata = payloadModel.Metadata
-            };
+            var payloadContext = JsonConvert.DeserializeObject<PayloadContext>(payload, _serializerSettings);
+
+            if (_eventTypeCache.TryGet(payloadContext.Type, out var type))
+                return (IEvent)JsonConvert.DeserializeObject(payloadContext.Payload, type, _serializerSettings);
+
+            throw new InvalidOperationException($"Payload of type: {payloadContext.Type} is unsupported");
         }
     }
 }

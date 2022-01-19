@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using OpenEventSourcing.Events;
+﻿using SIO.Infrastructure.Events;
 
 namespace SIO.Domain.Emails.Serialization
 {
     public interface IPayloadSerializer
     {
-        string Serialize<TEvent>(TEvent @event, Dictionary<string, object> metadata) where TEvent : IEvent;
+        string Serialize(IEventContext<IEvent> payload);
     }
 }

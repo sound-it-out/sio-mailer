@@ -1,12 +1,12 @@
-﻿using System;
+﻿using SIO.Infrastructure.Projections;
 
 namespace SIO.Domain.Users.Projections
 {
-    public class User
+    public class User : IProjection
     {
-        public Guid Id { get; set; }
+        public string Subject { get; set; }
+        public string FirstName { get; set; }
         public string Email { get; set; }
-        public string PasswordToken { get; set; }
-        public string ActivationToken { get; set; }
+        public bool Verified { get; set; }
     }
 }

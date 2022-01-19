@@ -1,9 +1,9 @@
-﻿using OpenEventSourcing.Events;
+﻿using SIO.Infrastructure.Events;
 
 namespace SIO.Domain.Emails.Serialization
 {
     public interface IPayloadDeserializer
     {
-        Payload<TEvent> Deserialize<TEvent>(string payload) where TEvent: IEvent;
+        IEvent Deserialize(string payload);
     }
 }

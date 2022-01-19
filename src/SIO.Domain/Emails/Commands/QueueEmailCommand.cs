@@ -1,23 +1,24 @@
-﻿using System;
-using OpenEventSourcing.Commands;
+﻿using SIO.Infrastructure;
+using SIO.Infrastructure.Commands;
+using SIO.Infrastructure.Events;
+using System;
 
 namespace SIO.Domain.Emails.Commands
 {
     public class QueueEmailCommand : Command
     {
-        public Guid RecipientId { get; set; }
-        public string Subject { get; set; }
-        public string Payload { get; set; }
-        public string Template { get; set; }
-        public string Type { get; set; }
+        public DateTimeOffset? PublicationDate { get; }
+        public IEventContext<IEvent> Event { get; }
 
-        public QueueEmailCommand(Guid aggregateId, Guid correlationId, string userId, Guid recipientId, string subject, string payload, string template, string type) : base(aggregateId, correlationId, 0, userId)
+        public QueueEmailCommand(string subject,
+            CorrelationId? correlationId,
+            int version,
+            Actor actor,
+            DateTimeOffset? publicationDate,
+            IEventContext<IEvent> @event) : base(subject, correlationId, version, actor)
         {
-            RecipientId = recipientId;
-            Subject = subject;
-            Payload = payload;
-            Template = template;
-            Type = type;
+            PublicationDate = publicationDate;
+            Event = @event;
         }
     }
 }

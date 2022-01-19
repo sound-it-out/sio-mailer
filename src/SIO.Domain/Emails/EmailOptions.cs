@@ -2,12 +2,6 @@
 {
     public class EmailOptions
     {
-        public EmailUrls Urls { get; set; }
-
-        public class EmailUrls
-        {
-            public string ResetPassword { get; set; }
-            public string Activate { get; set; }
-        }
+        public int MaxRetries { get; set; }
     }
 }
