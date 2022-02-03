@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SIO.Domain.Emails.Events;
+using SIO.Domain.Emails.Services;
 using SIO.Infrastructure.EntityFrameworkCore.DbContexts;
 using SIO.Infrastructure.Projections;
 
@@ -10,23 +11,23 @@ namespace SIO.Domain.Emails.Projections.Managers
     {
         private readonly IEnumerable<IProjectionWriter<EmailQueue>> _projectionWriters;
         private readonly ISIOProjectionDbContextFactory _projectionDbContextFactory;
-        private readonly EmailOptions _emailOptions;
+        private readonly IOptionsMonitor<EmailPublisherOptions> _options;
 
         public EmailQueueProjectionManager(ILogger<ProjectionManager<EmailQueue>> logger,
             IEnumerable<IProjectionWriter<EmailQueue>> projectionWriters,
             ISIOProjectionDbContextFactory projectionDbContextFactory,
-            IOptionsSnapshot<EmailOptions> optionsSnapshot) : base(logger)
+            IOptionsMonitor<EmailPublisherOptions> options) : base(logger)
         {
             if (projectionWriters == null)
                 throw new ArgumentNullException(nameof(projectionWriters));
             if (projectionDbContextFactory == null)
                 throw new ArgumentNullException(nameof(projectionDbContextFactory));
-            if (optionsSnapshot == null)
-                throw new ArgumentNullException(nameof(optionsSnapshot));
+            if (options == null)
+                throw new ArgumentNullException(nameof(options));
 
             _projectionWriters = projectionWriters;
             _projectionDbContextFactory = projectionDbContextFactory;
-            _emailOptions = optionsSnapshot.Value;
+            _options = options;
 
             Handle<EmailQueued>(HandleAsync);
             Handle<EmailFailed>(HandleAsync);
@@ -61,7 +62,7 @@ namespace SIO.Domain.Emails.Projections.Managers
             using (var context = _projectionDbContextFactory.Create())
             {
                 var email = await context.Set<EmailQueue>().FindAsync(@event.Subject);
-                if (email?.Attempts == _emailOptions.MaxRetries)
+                if (email?.Attempts == _options.CurrentValue.MaxRetries)
                 {
                     await Task.WhenAll(_projectionWriters.Select(pw => pw.RemoveAsync(@event.Subject)));
                 }

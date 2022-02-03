@@ -21,22 +21,25 @@ namespace SIO.Domain.Emails.Services
         private CancellationTokenSource StoppingCts { get; set; }
         private readonly IServiceScope _scope;
         private readonly ILogger<EmailPublisher> _logger;
-        private readonly IOptionsSnapshot<EmailPublisherOptions> _options;
+        private readonly IOptionsMonitor<EmailPublisherOptions> _options;
         private readonly ISIOProjectionDbContextFactory _projectionDbContextFactory;
         private readonly string _name;
         private readonly ICommandDispatcher _commandDispatcher;
 
         public EmailPublisher(IServiceScopeFactory serviceScopeFactory,
+            IOptionsMonitor<EmailPublisherOptions> options,
             ILogger<EmailPublisher> logger)
         {
             if (serviceScopeFactory == null)
                 throw new ArgumentNullException(nameof(serviceScopeFactory));
+            if (options == null)
+                throw new ArgumentNullException(nameof(options));
             if (logger == null)
                 throw new ArgumentNullException(nameof(logger));
 
             _scope = serviceScopeFactory.CreateScope();
             _logger = logger;
-            _options = _scope.ServiceProvider.GetRequiredService<IOptionsSnapshot<EmailPublisherOptions>>();
+            _options = options;
             _projectionDbContextFactory = _scope.ServiceProvider.GetRequiredService<ISIOProjectionDbContextFactory>();
             _commandDispatcher = _scope.ServiceProvider.GetRequiredService<ICommandDispatcher>();
 
@@ -121,7 +124,7 @@ namespace SIO.Domain.Emails.Services
                         }
 
                         if (eventsInQueue.Count() == 0)
-                            await Task.Delay(_options.Value.Interval);
+                            await Task.Delay(_options.CurrentValue.Interval);
                         else
                             await context.SaveChangesAsync();
                     }

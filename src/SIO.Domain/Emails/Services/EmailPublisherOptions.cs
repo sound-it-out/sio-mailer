@@ -1,7 +1,8 @@
 ﻿namespace SIO.Domain.Emails.Services
 {
-    internal class EmailPublisherOptions
+    public class EmailPublisherOptions
     {
         public int Interval { get; set; }
+        public int MaxRetries { get; set; }
     }
 }

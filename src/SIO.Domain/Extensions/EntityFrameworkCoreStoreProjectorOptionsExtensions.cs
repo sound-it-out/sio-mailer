@@ -1,4 +1,5 @@
-﻿using SIO.Domain.Emails.Projections;
+﻿using Microsoft.Extensions.Configuration;
+using SIO.Domain.Emails.Projections;
 using SIO.Domain.Emails.Projections.Managers;
 using SIO.Domain.Users.Projections;
 using SIO.Domain.Users.Projections.Managers;
@@ -10,9 +11,9 @@ namespace SIO.Domain.Extensions
 {
     public static class EntityFrameworkCoreStoreProjectorOptionsExtensions
     {
-        public static void WithDomainProjections(this EntityFrameworkCoreStoreProjectorOptions options)
-            => options.WithProjection<EmailFailure, EmailFailureProjectionManager, SIOMailerStoreDbContext>(o => o.Interval = 5000)
-                .WithProjection<EmailQueue, EmailQueueProjectionManager, SIOMailerStoreDbContext>(o => o.Interval = 5000)
-                .WithProjection<User, UserProjectionManager, SIOStoreDbContext>(o => o.Interval = 5000);
+        public static void WithDomainProjections(this EntityFrameworkCoreStoreProjectorOptions options, IConfiguration configuration)
+            => options.WithProjection<EmailFailure, EmailFailureProjectionManager, SIOMailerStoreDbContext>(o => o.Interval = configuration.GetValue<int>("EmailFailure:Interval"))
+                .WithProjection<EmailQueue, EmailQueueProjectionManager, SIOMailerStoreDbContext>(o => o.Interval = configuration.GetValue<int>("EmailQueue:Interval"))
+                .WithProjection<User, UserProjectionManager, SIOStoreDbContext>(o => o.Interval = configuration.GetValue<int>("User:Interval"));
     }
 }

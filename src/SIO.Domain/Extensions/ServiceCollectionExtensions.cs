@@ -29,9 +29,8 @@ namespace SIO.Domain.Extensions
             services.AddScoped<IPayloadSerializer, PayloadSerializer>();
             services.AddHostedService<EventProcessor>();
             services.AddHostedService<EmailPublisher>();
-            services.Configure<EventProcessorOptions>(o => o.Interval = 300);
-            services.Configure<EmailPublisherOptions>(o => o.Interval = 300);
-            services.Configure<EmailOptions>(o => o.MaxRetries = 5);
+            services.Configure<EventProcessorOptions>(configuration.GetSection("EventProcessor"));
+            services.Configure<EmailPublisherOptions>(configuration.GetSection("EmailPublisher"));
             services.Configure<SmtpOptions>(configuration.GetSection("SMTP"));
             services.Configure<UrlOptions>(configuration.GetSection("URL"));
             return services;

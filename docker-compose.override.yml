@@ -11,6 +11,12 @@ services:
       - SMTP__Host=sio.mailhog
       - SMTP__Port=1025
       - URL__IdentityUrl=https://sio.identity:5001
+      - EventProcessor__Interval=50
+      - EmailPublisher__Interval=50
+      - EmailPublisher__MaxRetries=5
+      - EmailFailure__Interval=5000
+      - EmailQueue__Interval=50
+      - User__Interval=50
     ports:
       - "5222:80"
       - "7222:443"

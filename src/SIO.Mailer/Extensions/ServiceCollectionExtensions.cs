@@ -23,7 +23,7 @@ namespace SIO.Mailer.Extensions
                     options.AddStore<SIOMailerStoreDbContext>(configuration.GetConnectionString("MailerStore"), o => o.MigrationsAssembly($"{nameof(SIO)}.{nameof(Migrations)}"));
                     options.AddProjections(configuration.GetConnectionString("Projection"), o => o.MigrationsAssembly($"{nameof(SIO)}.{nameof(Migrations)}"));
                 })
-                .AddEntityFrameworkCoreStoreProjector(options => options.WithDomainProjections())
+                .AddEntityFrameworkCoreStoreProjector(options => options.WithDomainProjections(configuration))
                 .AddEvents(o => o.Register(EventHelper.AllEvents))
                 .AddCommands()
                 .AddJsonSerializers();
